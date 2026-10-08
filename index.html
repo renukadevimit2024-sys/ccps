@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Credit Card Processing System</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-view">
+  <div class="login-card">
+    <div class="banner">DEMO SYSTEM — sample data only, no real payments</div>
+    <h1>Credit Card Processing System</h1>
+    <p>Sign in to continue.</p>
+    <div class="field"><label>Username</label><input id="li-user" value="admin"></div>
+    <div class="field"><label>Password</label><input id="li-pass" type="password" value="admin123"></div>
+    <button class="btn btn-primary btn-block" onclick="login()">Log in</button>
+    <div class="msg bad" id="login-err">Enter a username and password.</div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-view" class="app">
+  <div class="sidebar">
+    <div class="brand">💳 CCPS</div>
+    <div class="nav-item active" data-page="home">Home</div>
+    <div class="nav-item" data-page="customer">Customer Registration</div>
+    <div class="nav-item" data-page="payment">Card & Payment</div>
+    <div class="nav-item" data-page="transactions">Transactions</div>
+    <div class="nav-item" data-page="reports">Reports</div>
+    <div class="nav-item logout" onclick="logout()" style="margin-top:20px;">↩ Log out</div>
+  </div>
+
+  <div class="content">
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <h2>Dashboard</h2>
+      <div class="grid">
+        <div class="stat"><div class="num" id="stat-customers">0</div><div class="lbl">Registered customers</div></div>
+        <div class="stat"><div class="num" id="stat-tx">0</div><div class="lbl">Total transactions</div></div>
+        <div class="stat"><div class="num" id="stat-approved">0</div><div class="lbl">Approved payments</div></div>
+        <div class="stat"><div class="num" id="stat-revenue">$0</div><div class="lbl">Total processed</div></div>
+      </div>
+      <div class="panel">
+        <h2 style="font-size:15px;">Recent transactions</h2>
+        <table><thead><tr><th>ID</th><th>Customer</th><th>Amount</th><th>Status</th></tr></thead>
+        <tbody id="home-recent"></tbody></table>
+      </div>
+    </div>
+
+    <!-- CUSTOMER REGISTRATION -->
+    <div class="page" id="page-customer">
+      <h2>Customer Registration</h2>
+      <div class="panel">
+        <div class="row">
+          <div class="field"><label>Full name</label><input id="c-name" placeholder="Enter full name"></div>
+          <div class="field"><label>Email</label><input id="c-email" placeholder="renuka@example.com"></div>
+          <div class="field"><label>Phone</label><input id="c-phone" placeholder="9876543210"></div>
+        </div>
+        <button class="btn btn-primary" onclick="addCustomer()">Register customer</button>
+        <div class="msg ok" id="c-msg">Customer registered successfully.</div>
+      </div>
+      <div class="panel">
+        <h2 style="font-size:15px;">Registered customers</h2>
+        <table><thead><tr><th>ID</th><th>Name</th><th>Email</th><th>Phone</th></tr></thead>
+        <tbody id="customer-list"></tbody></table>
+      </div>
+    </div>
+
+    <!-- CARD & PAYMENT -->
+    <div class="page" id="page-payment">
+      <h2>Card Validation & Payment Processing</h2>
+      <div class="panel">
+        <div class="row">
+          <div class="field">
+            <label>Customer</label>
+            <select id="p-customer"></select>
+          </div>
+          <div class="field"><label>Amount ($)</label><input id="p-amount" placeholder="250.00"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Card number</label><input id="p-cardnum" placeholder="4111 1111 1111 1111" maxlength="19"></div>
+          <div class="field"><label>Expiry (MM/YY)</label><input id="p-exp" placeholder="12/28" maxlength="5"></div>
+          <div class="field"><label>CVV</label><input id="p-cvv" placeholder="123" maxlength="3"></div>
+        </div>
+        <button class="btn btn-primary" onclick="processPayment()">Validate & Process Payment</button>
+        <div class="msg" id="p-msg"></div>
+      </div>
+    </div>
+
+    <!-- TRANSACTIONS -->
+    <div class="page" id="page-transactions">
+      <h2>Transaction History</h2>
+      <div class="panel">
+        <div class="row">
+          <div class="field"><label>Search by customer or transaction ID</label><input id="t-search" oninput="renderTransactions()" placeholder="Type to search..."></div>
+          <div class="field">
+            <label>Status</label>
+            <select id="t-status" onchange="renderTransactions()">
+              <option value="">All</option>
+              <option value="Approved">Approved</option>
+              <option value="Declined">Declined</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <table><thead><tr><th>Transaction ID</th><th>Customer</th><th>Card</th><th>Amount</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody id="tx-list"></tbody></table>
+      </div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="page" id="page-reports">
+      <h2>Reports</h2>
+      <div class="grid">
+        <div class="stat"><div class="num" id="r-total">0</div><div class="lbl">Total transactions</div></div>
+        <div class="stat"><div class="num" id="r-approved">0</div><div class="lbl">Approved</div></div>
+        <div class="stat"><div class="num" id="r-declined">0</div><div class="lbl">Declined</div></div>
+        <div class="stat"><div class="num" id="r-avg">$0</div><div class="lbl">Average transaction</div></div>
+      </div>
+      <div class="panel">
+        <h2 style="font-size:15px;">Approved vs Declined</h2>
+        <div class="bars" id="report-bars"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
